@@ -2,9 +2,12 @@ package main;
 
 public class BankAccount {
 
+    private static int nextAvailableAccountNumber = 1;
     private double balance;
+    private int accountNumber;
 
     public BankAccount() {
+        this.accountNumber = nextAvailableAccountNumber++; // increment account number for uniqueness
         this.balance = 0;
     }
 
@@ -18,5 +21,9 @@ public class BankAccount {
 
     public double getBalance() {
         return this.balance;
+    }
+
+    public int getAccountNumber() {
+        return this.accountNumber;
     }
 }
