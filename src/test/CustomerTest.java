@@ -4,6 +4,7 @@ import main.Customer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -84,6 +85,22 @@ public class CustomerTest {
         customer.createBankAccount();
         int accountNumber = customer.getBankAccounts().iterator().next().getAccountNumber();
         assertTrue(customer.getBankAccount(accountNumber) instanceof BankAccount);
+    }
+
+    @Test
+    public void testCloseBankAccount() {
+        customer.createBankAccount();
+        assertTrue(customer.getBankAccounts().size() >= 1);
+
+        int accountNumber = customer.getBankAccounts().iterator().next().getAccountNumber();
+
+        assertTrue(customer.closeBankAccount(accountNumber));
+        assertEquals(0, customer.getBankAccounts().size());
+    }
+
+    @Test
+    public void testCloseNonExistentBankAccount() {
+        assertFalse(customer.closeBankAccount(2307));
     }
 
 }
