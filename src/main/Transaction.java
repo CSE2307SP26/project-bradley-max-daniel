@@ -1,7 +1,7 @@
 package main;
 
 public class Transaction {
-
+    
     private String type;
     private double amount;
     private int otherAccountNumber;
@@ -13,16 +13,16 @@ public class Transaction {
     }
 
     public String getType() {
-        return type;
-    }
+    return type;
+}
 
-    public double getAmount() {
-        return amount;
-    }
+public double getAmount() {
+    return amount;
+}
 
-    public int getOtherAccountNumber() {
-        return otherAccountNumber;
-    }
+public int getOtherAccountNumber() {
+    return otherAccountNumber;
+}
 
     @Override
     public String toString() {
