@@ -1,6 +1,5 @@
 package test;
 import main.BankAccount;
-import main.Customer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
@@ -24,21 +23,23 @@ public class BankAccountTest {
         sender.deposit(100.0);
         sender.transfer(receiver, 40.0);
 
-        assertEquals(60.0, sender.getBalance(), 0.0001);
+        assertEquals(60.0, sender.getBalance(), 0.0001); //the 0.0001 is the delta for floating point comparison
         assertEquals(40.0, receiver.getBalance(), 0.0001);
     }
 
     @Test
-    public void testTransferZeroAmountThrowsException() {
+    public void testTransferZeroAmount() {
         sender.deposit(100.0);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> { 
             sender.transfer(receiver, 0.0);
         });
+
+        //source for assertThrows: https://docs.junit.org/5.0.1/api/org/junit/jupiter/api/Assertions.html
     }
 
     @Test
-    public void testTransferNegativeAmountThrowsException() {
+    public void testTransferNegativeAmount() {
         sender.deposit(100.0);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -47,7 +48,7 @@ public class BankAccountTest {
     }
 
     @Test
-    public void testTransferMoreThanBalanceThrowsException() {
+    public void testTransferMoreThanBalance() {
         sender.deposit(50.0);
 
         assertThrows(IllegalArgumentException.class, () -> {
