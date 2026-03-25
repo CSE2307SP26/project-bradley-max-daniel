@@ -8,7 +8,6 @@ public class BankAccount {
     private int accountNumber;
     private ArrayList<Transaction> transactionHistory;
 
-
     public BankAccount() {
         this.accountNumber = nextAvailableAccountNumber++; // increment account number for uniqueness
         this.balance = 0;
@@ -42,6 +41,14 @@ public class BankAccount {
                 new Transaction("Transfer In", amount, this.getAccountNumber()));
     }
 
+    public void withdraw(double amountToWithdraw){
+        double totalBalanceInAccount = this.balance;
+        if(amountToWithdraw > totalBalanceInAccount || amountToWithdraw < 0){
+            throw new IllegalArgumentException();
+        }
+        this.balance -= amountToWithdraw;
+    }
+
     public void viewTransactionHistory() {
         for (Transaction t : transactionHistory) {
             System.out.println(t);
@@ -54,14 +61,5 @@ public class BankAccount {
 
     public double getBalance() {
         return this.balance;
-    }
-
-    //Added that customers can withdraw from a bank account 
-    public void withdraw(double amountToWithdraw){
-        double totalBalanceInAccount = this.balance;
-        if(amountToWithdraw > totalBalanceInAccount || amountToWithdraw < 0){
-            throw new IllegalArgumentException();
-        }
-        this.balance -= amountToWithdraw;
     }
 }

@@ -7,9 +7,8 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT = 1;
     private static final int SELECT_ACCOUNT = 2;
     private static final int DEPOSIT = 3;
-    private static final int CLOSE_ACCOUNT = 4;
-    private static final int EXIT = 5;
-	private static final int MAX_SELECTION = 5;
+    private static final int EXIT = 4;
+	private static final int MAX_SELECTION = 4;
 
     private Customer customer;
     private BankAccount selectedBankAccount = null;
@@ -30,8 +29,7 @@ public class MainMenu {
         System.out.println("1. Create a new bank account");
         System.out.println("2. Select a bank account");
         System.out.println("3. Make a deposit");
-        System.out.println("4. Close an existing bank account");
-        System.out.println("5. Exit the app");
+        System.out.println("4. Exit the app");
     }
 
     public int getUserSelection(int max) {
@@ -53,9 +51,6 @@ public class MainMenu {
                 break;
             case DEPOSIT:
                 performDeposit();
-                break;
-            case CLOSE_ACCOUNT:
-                closeAccount();
                 break;
         }
     }
@@ -94,21 +89,6 @@ public class MainMenu {
             depositAmount = keyboardInput.nextInt();
         }
         selectedBankAccount.deposit(depositAmount);
-    }
-
-    public void closeAccount() {
-        if (selectedBankAccount == null) {
-            System.out.println("No account selected. Please select an account first.");
-            return;
-        }
-
-        int accountNumber = selectedBankAccount.getAccountNumber();
-        if (customer.closeBankAccount(accountNumber)) {
-            System.out.println("Successfully closed bank account #" + accountNumber);
-            selectedBankAccount = null;
-        } else {
-            System.out.println("Failed to close bank account #" + accountNumber);
-        }
     }
 
     public void run() {

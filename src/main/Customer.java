@@ -15,10 +15,6 @@ public class Customer {
         return bankAccount;
     }
 
-    public boolean closeBankAccount(int accountNumber) {
-       return this.bankAccounts.remove(accountNumber) != null;
-    }
-
     public BankAccount getBankAccount(int accountNumber) {
         return this.bankAccounts.get(accountNumber);
     }
@@ -27,7 +23,6 @@ public class Customer {
         return this.bankAccounts.values();
     }
 
-    //Added that customers get their account balance
     public double checkAccountBalance(int accountNumber){
         BankAccount account = this.bankAccounts.get(accountNumber);
         if(account == null){
@@ -35,8 +30,6 @@ public class Customer {
         }
         return account.getBalance();
     }
-
-    // Withdraw Feature
 
     public void withdraw(int accountNumber, double amountToWithdraw){
         BankAccount account = this.bankAccounts.get(accountNumber);
