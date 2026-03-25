@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -103,4 +104,70 @@ public class CustomerTest {
         assertFalse(customer.closeBankAccount(2307));
     }
 
+   public void testCheckAccountBalanceOfZero() {
+       BankAccount account = customer.createBankAccount();
+
+
+       double balance = customer.checkAccountBalance(account.getAccountNumber());
+
+
+       assertEquals(0,balance,.001);
+   }
+
+   @Test
+   public void testCheckAccountBalance() {
+       BankAccount account = customer.createBankAccount();
+
+
+
+
+       account.deposit(67);
+       account.deposit(25);
+
+
+       double balance = customer.checkAccountBalance(account.getAccountNumber());
+
+
+       assertEquals(92,balance,.001);
+   }
+
+   @Test
+   public void testCheckAccountBalanceNoAccount() {
+       int invalidAccountNumber = 2026;
+
+
+       try{
+           customer.checkAccountBalance(invalidAccountNumber);
+           fail();
+       } catch (IllegalArgumentException exception){
+        
+       }
+   }
+
+   @Test
+    public void testCustomerWithdraw() {
+        BankAccount account = customer.createBankAccount();
+
+        account.deposit(100);
+
+        customer.withdraw(account.getAccountNumber(),50);
+
+        double balance = account.getBalance();
+
+        assertEquals(50,balance,.001);
+    }
+
+     @Test
+    public void testCustomerWithdrawMoreThanBalance() {
+        BankAccount account = customer.createBankAccount();
+
+        account.deposit(100);
+
+        try{
+            customer.withdraw(account.getAccountNumber(), 1000);
+            fail();
+        } catch (IllegalArgumentException exception){
+
+        }
+    }
 }
