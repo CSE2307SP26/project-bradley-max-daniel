@@ -22,4 +22,20 @@ public class Customer {
     public Collection<BankAccount> getBankAccounts() {
         return this.bankAccounts.values();
     }
+
+    public double checkAccountBalance(int accountNumber){
+        BankAccount account = this.bankAccounts.get(accountNumber);
+        if(account == null){
+            throw new IllegalArgumentException();
+        }
+        return account.getBalance();
+    }
+
+    public void withdraw(int accountNumber, double amountToWithdraw){
+        BankAccount account = this.bankAccounts.get(accountNumber);
+        if (account == null){
+            throw new IllegalArgumentException();
+        }
+        account.withdraw(amountToWithdraw);
+    }
 }
