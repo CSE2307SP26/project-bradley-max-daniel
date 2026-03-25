@@ -27,6 +27,15 @@ public class Customer {
         return this.bankAccounts.values();
     }
 
+    //Added that customers get their account balance
+    public double checkAccountBalance(int accountNumber){
+        BankAccount account = this.bankAccounts.get(accountNumber);
+        if(account == null){
+            throw new IllegalArgumentException();
+        }
+        return account.getBalance();
+    }
+
     // Withdraw Feature
 
     public void withdraw(int accountNumber, double amountToWithdraw){

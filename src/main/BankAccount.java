@@ -29,6 +29,9 @@ public class BankAccount {
         return transactionHistory;
     }
 
+    public int getAccountNumber() {
+        return this.accountNumber;
+    }
     public void transfer(BankAccount targetAccount, double amount) {
         if (amount <= 0 || this.balance < amount) {
             throw new IllegalArgumentException();
