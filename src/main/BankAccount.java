@@ -54,6 +54,13 @@ public class BankAccount {
         return this.accountNumber;
     }
 
+    //Added that customers can withdraw from a bank account 
+    public void withdraw(double amountToWithdraw){
+        double totalBalanceInAccount = this.balance;
+        if(amountToWithdraw > totalBalanceInAccount || amountToWithdraw < 0){
+            throw new IllegalArgumentException();
+        }
+        this.balance -= amountToWithdraw;
     public ArrayList<Transaction> getTransactionHistory() {
         return transactionHistory;
     }
