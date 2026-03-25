@@ -17,6 +17,8 @@ public class BankAccount {
     public void deposit(double amount) {
         if (amount > 0) {
             this.balance += amount;
+
+            this.transactionHistory.add(new Transaction("Deposit", amount, this.accountNumber));
         } else {
             throw new IllegalArgumentException();
         }
@@ -31,22 +33,34 @@ public class BankAccount {
             throw new IllegalArgumentException();
         }
 
-        this.balance -= amount;
-        targetAccount.balance += amount;
+        try {
+            this.balance -= amount;
+            targetAccount.deposit(amount);
 
-        this.transactionHistory.add(
-                new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
+            this.transactionHistory.add(
+                    new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
 
-        targetAccount.transactionHistory.add(
-                new Transaction("Transfer In", amount, this.getAccountNumber()));
+            targetAccount.getTransactionHistory().add(
+                    new Transaction("Transfer In", amount, this.getAccountNumber()));
+
+        } catch (Exception e) {
+            this.balance += amount; //did not use deposit method to avoid adding a failed transfer to the transaction history of the target account
+
+            this.transactionHistory.add(
+                    new Transaction("Failed Transfer Out", amount, targetAccount.getAccountNumber()));
+
+            throw e;
+        }
     }
 
-    public void withdraw(double amountToWithdraw){
+    public void withdraw(double amountToWithdraw) {
         double totalBalanceInAccount = this.balance;
-        if(amountToWithdraw > totalBalanceInAccount || amountToWithdraw < 0){
+        if (amountToWithdraw > totalBalanceInAccount || amountToWithdraw <= 0) {
             throw new IllegalArgumentException();
         }
         this.balance -= amountToWithdraw;
+
+        this.transactionHistory.add(new Transaction("Withdrawal", amountToWithdraw, this.accountNumber));
     }
 
     public void viewTransactionHistory() {
