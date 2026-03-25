@@ -15,6 +15,10 @@ public class Customer {
         return bankAccount;
     }
 
+    public boolean closeBankAccount(int accountNumber) {
+       return this.bankAccounts.remove(accountNumber) != null;
+    }
+
     public BankAccount getBankAccount(int accountNumber) {
         return this.bankAccounts.get(accountNumber);
     }
