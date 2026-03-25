@@ -3,8 +3,6 @@ package main;
 import java.util.ArrayList;
 
 public class BankAccount {
-    private static int nextAccountNumber = 1;
-
     private static int nextAvailableAccountNumber = 1;
     private double balance;
     private int accountNumber;
@@ -29,9 +27,6 @@ public class BankAccount {
         return transactionHistory;
     }
 
-    public int getAccountNumber() {
-        return this.accountNumber;
-    }
     public void transfer(BankAccount targetAccount, double amount) {
         if (amount <= 0 || this.balance < amount) {
             throw new IllegalArgumentException();
@@ -57,6 +52,10 @@ public class BankAccount {
         return this.accountNumber;
     }
 
+    public double getBalance() {
+        return this.balance;
+    }
+
     //Added that customers can withdraw from a bank account 
     public void withdraw(double amountToWithdraw){
         double totalBalanceInAccount = this.balance;
@@ -64,25 +63,5 @@ public class BankAccount {
             throw new IllegalArgumentException();
         }
         this.balance -= amountToWithdraw;
-    public ArrayList<Transaction> getTransactionHistory() {
-        return transactionHistory;
     }
-
-    public void transfer(BankAccount targetAccount, double amount) {
-        if (amount <= 0 || this.balance < amount) {
-            throw new IllegalArgumentException();
-        }
-        
-        this.balance -= amount;
-        targetAccount.balance += amount;
-
-        this.transactionHistory.add(
-            new Transaction("Transfer Out", amount, targetAccount.getAccountNumber())
-        );
-
-        targetAccount.transactionHistory.add(
-            new Transaction("Transfer In", amount, this.getAccountNumber())
-        );
-    }
-
 }
