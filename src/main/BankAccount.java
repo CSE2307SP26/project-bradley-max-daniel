@@ -34,18 +34,21 @@ public class BankAccount {
         }
 
         try {
-            this.withdraw(amount);
+            this.balance -= amount;
             targetAccount.deposit(amount);
 
             this.transactionHistory.add(
                     new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
 
-            targetAccount.transactionHistory.add(
+            targetAccount.getTransactionHistory().add(
                     new Transaction("Transfer In", amount, this.getAccountNumber()));
 
         } catch (Exception e) {
+            this.balance += amount; //did not use deposit method to avoid adding a failed transfer to the transaction history of the target account
 
-            this.deposit(amount);
+            this.transactionHistory.add(
+                    new Transaction("Failed Transfer Out", amount, targetAccount.getAccountNumber()));
+
             throw e;
         }
     }

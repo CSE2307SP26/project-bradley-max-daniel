@@ -7,9 +7,13 @@ public class MainMenu {
     private static final int CREATE_ACCOUNT = 1;
     private static final int SELECT_ACCOUNT = 2;
     private static final int DEPOSIT = 3;
-    private static final int CLOSE_ACCOUNT = 4;
-    private static final int EXIT = 5;
-	private static final int MAX_SELECTION = 5;
+    private static final int WITHDRAW = 4;
+    private static final int TRANSFER = 5;
+    private static final int VIEW_TRANSACTION_HISTORY = 6;
+    private static final int GET_BALANCE = 7;
+    private static final int CLOSE_ACCOUNT = 8;
+    private static final int EXIT = 9;
+    private static final int MAX_SELECTION = 9;
 
     private Customer customer;
     private BankAccount selectedBankAccount = null;
@@ -26,17 +30,22 @@ public class MainMenu {
         if (selectedBankAccount != null) {
             System.out.println("Selected account: #" + selectedBankAccount.getAccountNumber() + "\n");
         }
-        
+
         System.out.println("1. Create a new bank account");
         System.out.println("2. Select a bank account");
         System.out.println("3. Make a deposit");
-        System.out.println("4. Close an existing bank account");
-        System.out.println("5. Exit the app");
+        System.out.println("4. Withdraw money");
+        System.out.println("5. Transfer money");
+        System.out.println("6. View transaction history");
+        System.out.println("7. View balance");
+        System.out.println("8. Close an existing bank account");
+        System.out.println("9. Exit the app");
+
     }
 
     public int getUserSelection(int max) {
         int selection = -1;
-        while(selection < 1 || selection > max) {
+        while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
         }
@@ -44,21 +53,33 @@ public class MainMenu {
     }
 
     public void processInput(int selection) {
-        switch (selection) {
-            case CREATE_ACCOUNT:
-                createAccount();
-                break;
-            case SELECT_ACCOUNT:
-                selectAccount();
-                break;
-            case DEPOSIT:
-                performDeposit();
-                break;
-            case CLOSE_ACCOUNT:
-                closeAccount();
-                break;
-        }
+    switch (selection) {
+        case CREATE_ACCOUNT:
+            createAccount();
+            break;
+        case SELECT_ACCOUNT:
+            selectAccount();
+            break;
+        case DEPOSIT:
+            performDeposit();
+            break;
+        case WITHDRAW:
+            performWithdraw();
+            break;
+        case TRANSFER:
+            performTransfer();
+            break;
+        case VIEW_TRANSACTION_HISTORY:
+            performViewTransactionHistory();
+            break;
+        case GET_BALANCE:
+            performGetBalance();
+            break;
+        case CLOSE_ACCOUNT:
+            closeAccount();
+            break;
     }
+}
 
     public void createAccount() {
         int accountNumber = customer.createBankAccount().getAccountNumber();
@@ -89,7 +110,7 @@ public class MainMenu {
         }
 
         double depositAmount = -1;
-        while(depositAmount < 0) {
+        while (depositAmount < 0) {
             System.out.print("How much would you like to deposit: ");
             depositAmount = keyboardInput.nextInt();
         }
@@ -111,9 +132,77 @@ public class MainMenu {
         }
     }
 
+    public void performTransfer() {
+        if (selectedBankAccount == null) {
+            System.out.println("No account selected. Please select an account first.");
+            return;
+        }
+
+        System.out.print("Enter the account number you want to transfer to: ");
+        int targetAccountNumber = keyboardInput.nextInt();
+        BankAccount targetAccount = customer.getBankAccount(targetAccountNumber);
+        if (targetAccount == null) {
+            System.out.println("Target account not found. Please try again.");
+            return;
+        }
+
+        double transferAmount = -1;
+        while (transferAmount < 0) {
+            System.out.print("How much would you like to transfer: ");
+            transferAmount = keyboardInput.nextDouble();
+        }
+
+        try {
+            selectedBankAccount.transfer(targetAccount, transferAmount);
+            System.out.println("Successfully transferred $" + transferAmount + " to account #" + targetAccountNumber);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to transfer. Please check your balance and try again.");
+        }
+    }
+
+    public void performViewTransactionHistory() {
+        if (selectedBankAccount == null) {
+            System.out.println("No account selected. Please select an account first.");
+            return;
+        }
+
+        System.out.println("Transaction history for account #" + selectedBankAccount.getAccountNumber() + ":");
+        selectedBankAccount.viewTransactionHistory();
+    }
+
+    public void performGetBalance() {
+        if (selectedBankAccount == null) {
+            System.out.println("No account selected. Please select an account first.");
+            return;
+        }
+
+        double balance = customer.checkAccountBalance(selectedBankAccount.getAccountNumber());
+        System.out.println("Current balance for account #" + selectedBankAccount.getAccountNumber() + ": $" + balance);
+    }
+
+    public void performWithdraw() {
+        if (selectedBankAccount == null) {
+            System.out.println("No account selected. Please select an account first.");
+            return;
+        }
+
+        double withdrawAmount = -1;
+        while (withdrawAmount < 0) {
+            System.out.print("How much would you like to withdraw: ");
+            withdrawAmount = keyboardInput.nextDouble();
+        }
+
+        try {
+            customer.withdraw(selectedBankAccount.getAccountNumber(), withdrawAmount);
+            System.out.println("Successfully withdrew $" + withdrawAmount + " from account #" + selectedBankAccount.getAccountNumber());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to withdraw. Please check your balance and try again.");
+        }
+    }
+
     public void run() {
         int selection = -1;
-        while(selection != EXIT) {
+        while (selection != EXIT) {
             displayOptions();
             System.out.println();
             selection = getUserSelection(MAX_SELECTION);
