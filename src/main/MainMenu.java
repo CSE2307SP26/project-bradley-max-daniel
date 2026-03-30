@@ -12,16 +12,20 @@ public class MainMenu {
     private static final int VIEW_TRANSACTION_HISTORY = 6;
     private static final int GET_BALANCE = 7;
     private static final int CLOSE_ACCOUNT = 8;
-    private static final int EXIT = 9;
-    private static final int MAX_SELECTION = 9;
+    private static final int SIGN_OUT = 9;
+    private static final int EXIT = 10;
+    private static final int MAX_SELECTION = 10;
 
     private Customer customer;
+    private String loggedInUser; // not being used yet --> will be used in my persistence PR
     private BankAccount selectedBankAccount = null;
     private Scanner keyboardInput;
+    private AuthManager authManager;
 
     public MainMenu() {
-        this.customer = new Customer();
+        String loggedInUser = null;
         this.keyboardInput = new Scanner(System.in);
+        this.authManager = new AuthManager();
     }
 
     public void displayOptions() {
@@ -39,8 +43,8 @@ public class MainMenu {
         System.out.println("6. View transaction history");
         System.out.println("7. View balance");
         System.out.println("8. Close an existing bank account");
-        System.out.println("9. Exit the app");
-
+        System.out.println("9. Sign out");
+        System.out.println("10. Exit the app");
     }
 
     public int getUserSelection(int max) {
@@ -48,38 +52,42 @@ public class MainMenu {
         while (selection < 1 || selection > max) {
             System.out.print("Please make a selection: ");
             selection = keyboardInput.nextInt();
+            System.out.println();
         }
         return selection;
     }
 
     public void processInput(int selection) {
-    switch (selection) {
-        case CREATE_ACCOUNT:
-            createAccount();
-            break;
-        case SELECT_ACCOUNT:
-            selectAccount();
-            break;
-        case DEPOSIT:
-            performDeposit();
-            break;
-        case WITHDRAW:
-            performWithdraw();
-            break;
-        case TRANSFER:
-            performTransfer();
-            break;
-        case VIEW_TRANSACTION_HISTORY:
-            performViewTransactionHistory();
-            break;
-        case GET_BALANCE:
-            performGetBalance();
-            break;
-        case CLOSE_ACCOUNT:
-            closeAccount();
-            break;
+        switch (selection) {
+            case CREATE_ACCOUNT:
+                createAccount();
+                break;
+            case SELECT_ACCOUNT:
+                selectAccount();
+                break;
+            case DEPOSIT:
+                performDeposit();
+                break;
+            case WITHDRAW:
+                performWithdraw();
+                break;
+            case TRANSFER:
+                performTransfer();
+                break;
+            case VIEW_TRANSACTION_HISTORY:
+                performViewTransactionHistory();
+                break;
+            case GET_BALANCE:
+                performGetBalance();
+                break;
+            case CLOSE_ACCOUNT:
+                closeAccount();
+                break;
+            case SIGN_OUT:
+                signOut();
+                break;
+        }
     }
-}
 
     public void createAccount() {
         int accountNumber = customer.createBankAccount().getAccountNumber();
@@ -200,7 +208,37 @@ public class MainMenu {
         }
     }
 
-    public void run() {
+    private void authenticateUser() {
+        boolean isUserAuthenticated = false;
+        int MAX_SELECTION = 3;
+        final int LOGIN = 1;
+        final int REGISTER = 2;
+        final int AUTH_EXIT = 3;
+
+        while (!isUserAuthenticated) {
+            System.out.println("Please login or register to continue!\n");
+            System.out.println("1. Login");
+            System.out.println("2. Register");
+            System.out.println("3. Exit the app");
+            System.out.println();
+
+            int selection = getUserSelection(MAX_SELECTION);
+            keyboardInput.nextLine();
+            switch (selection) {
+                case LOGIN:
+                    isUserAuthenticated = login();
+                    break;
+                case REGISTER:
+                    isUserAuthenticated = register();
+                    break;
+                case AUTH_EXIT:
+                    System.exit(0);
+                    break;
+            }
+        }
+    }
+
+    private void mainMenu() {
         int selection = -1;
         while (selection != EXIT) {
             displayOptions();
@@ -211,6 +249,66 @@ public class MainMenu {
         }
     }
 
+    private boolean login() {
+        System.out.println("Thanks for coming back! Please enter your account details to sign in.\n");
+        System.out.print("Username: ");
+        String username = keyboardInput.nextLine();
+        System.out.print("Password: ");
+        String password = keyboardInput.nextLine();
+        
+        System.out.println();
+        try {
+            if (authManager.authenticate(username, password)) {
+                System.out.println("Login successful!\n");
+                loggedInUser = username;
+                return true;
+            } else {
+                System.out.println("Invalid username or password.\n");
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR: Unable to login. Please try again later.");
+        }
+        return false;
+    }
+
+    private boolean register() {
+        System.out.println("Welcome! Please choose a username and password to create an account.\n");
+        System.out.print("Username: ");
+        String username = keyboardInput.nextLine();
+        System.out.print("Password: ");
+        String password = keyboardInput.nextLine();
+        
+        System.out.println();
+        try {
+            if (authManager.createUser(username, password)) {
+                System.out.println("Registration successful!\n");
+                loggedInUser = username;
+                return true;
+            } else {
+                System.out.println("This username is already taken.\n");
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR: Unable to register. Please try again later.");
+        }
+        return false;
+    }
+
+    private void signOut() {
+        System.out.println("You have successfully signed out.\n");
+        loggedInUser = null;
+        selectedBankAccount = null;
+        authenticateUser();
+        customer = new Customer();
+        mainMenu();
+    }
+
+    public void run() {
+        System.out.println("Welcome to the 237 Bank App!\n");
+        authenticateUser();
+        this.customer = new Customer();
+        mainMenu();
+    }
+    
     public static void main(String[] args) {
         MainMenu bankApp = new MainMenu();
         bankApp.run();
