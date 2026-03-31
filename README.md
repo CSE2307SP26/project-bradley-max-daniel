@@ -6,7 +6,33 @@
 - Daniel Ribeiro
 - Bradley Ma
 
-## User stories
+### What commands are needed to compile and run your code from the command line?
+
+`chmod +x runApp.sh`
+
+`./runApp.sh`
+
+## Iteration 2
+
+### What user stories do you intend to complete next iteration?
+
+- Bradley:
+  - TBD
+  - TBD
+- Daniel:
+  - A customer should be able to sign in and sign out of their bank account.
+  - A customer's data should persist across multiple sessions
+- Max:
+  - TBD
+  - TBD
+
+### Is there anything that you implemented but doesn't currently work?
+
+No.
+
+## Iteration 1:
+
+### User stories
 
 1. A bank customer should be able to deposit into an existing account. (Shook)
 2. A bank customer should be able to withdraw from an account.
@@ -18,7 +44,7 @@
 8. A bank adminstrator should be able to collect fees from existing accounts when necessary.
 9. A bank adminstrator should be able to add an interest payment to an existing account when necessary.
 
-## What user stories do you intend to complete next iteration?
+### What user stories do you intend to complete next iteration?
 
 - Bradley:
   - A bank customer should be able to withdraw from an account.
@@ -30,12 +56,6 @@
   - A bank customer should be able to transfer money from one account to another.
   - A bank customer should be able to view their transaction history for an account.
 
-## Is there anything that you implemented but doesn't currently work?
+### Is there anything that you implemented but doesn't currently work?
 
 No.
-
-## What commands are needed to compile and run your code from the command line?
-
-`chmod +x runApp.sh`
-
-`./runApp.sh`
