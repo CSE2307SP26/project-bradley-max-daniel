@@ -3,32 +3,47 @@ import java.util.*;
 
 
 public class Customer {
-    private HashMap<Integer, BankAccount> bankAccounts;
+    private String username;
+    private List<BankAccount> bankAccounts;
 
-    public Customer() {
-        this.bankAccounts = new HashMap<>();
+    public Customer(String username) {
+        this.username = username;
+        this.bankAccounts = new ArrayList<>();
     }
 
-    public BankAccount createBankAccount() {
-        BankAccount bankAccount = new BankAccount();
-        this.bankAccounts.put(bankAccount.getAccountNumber(), bankAccount);
-        return bankAccount;
+    public String getUsername() { 
+        return username; 
     }
 
-    public boolean closeBankAccount(int accountNumber) {
-       return this.bankAccounts.remove(accountNumber) != null;
+    public List<BankAccount> getBankAccounts() { 
+        return bankAccounts;
+    }
+    public void setBankAccounts(List<BankAccount> bankAccounts) { 
+        this.bankAccounts = bankAccounts;
+    }
+
+    public void addBankAccount(BankAccount account) {
+        if (this.bankAccounts == null) {
+            bankAccounts = new ArrayList<>();
+        }
+        bankAccounts.add(account);
+    }
+
+    public boolean removeAccount(int accountNumber) {
+        return bankAccounts.removeIf(account -> account.getAccountNumber() == accountNumber);
     }
 
     public BankAccount getBankAccount(int accountNumber) {
-        return this.bankAccounts.get(accountNumber);
-    }
-
-    public Collection<BankAccount> getBankAccounts() {
-        return this.bankAccounts.values();
+        for (BankAccount account : bankAccounts) {
+            if (account.getAccountNumber() == accountNumber) {
+                return account;
+            }
+        }
+        return null;
     }
 
     public double checkAccountBalance(int accountNumber){
-        BankAccount account = this.bankAccounts.get(accountNumber);
+        BankAccount account = this.getBankAccount(accountNumber);
         if(account == null){
             throw new IllegalArgumentException();
         }
@@ -36,10 +51,18 @@ public class Customer {
     }
 
     public void withdraw(int accountNumber, double amountToWithdraw){
-        BankAccount account = this.bankAccounts.get(accountNumber);
+        BankAccount account = this.getBankAccount(accountNumber);
         if (account == null){
             throw new IllegalArgumentException();
         }
         account.withdraw(amountToWithdraw);
+    }
+
+    public List<Transaction> getTransactionHistory(int accountNumber) {
+        BankAccount account = getBankAccount(accountNumber);
+        if (account == null) { 
+            return new ArrayList<>();
+        }
+        return account.getTransactionHistory();
     }
 }

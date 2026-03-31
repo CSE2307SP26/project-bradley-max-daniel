@@ -12,10 +12,9 @@ import org.junit.jupiter.api.Test;
 public class CustomerTest {
     private Customer customer;
 
-
     @BeforeEach
     public void setUp() {
-        customer = new Customer();
+        customer = new Customer("test");
     }
 
     @Test
@@ -26,10 +25,9 @@ public class CustomerTest {
     
     @Test
     public void testCreateBankAccount() {
-        customer.createBankAccount();
-
-        BankAccount[] bankAccounts = customer.getBankAccounts().toArray(new BankAccount[0]);
-        int accountNumber = bankAccounts[0].getAccountNumber();
+        BankAccount account = new BankAccount();
+        customer.addBankAccount(account);
+        int accountNumber = account.getAccountNumber();
         
         assertEquals(1, customer.getBankAccounts().size());
         assertTrue(customer.getBankAccount(accountNumber) instanceof BankAccount);
@@ -38,14 +36,14 @@ public class CustomerTest {
 
     @Test
     public void testCreateMultipleBankAccounts() {
-        customer.createBankAccount();
-        customer.createBankAccount();
+        BankAccount account1 = new BankAccount();
+        BankAccount account2 = new BankAccount();
+        customer.addBankAccount(account1);
+        customer.addBankAccount(account2);
 
-        BankAccount[] bankAccounts = customer.getBankAccounts().toArray(new BankAccount[0]);
-        int firstAccountNumber = bankAccounts[0].getAccountNumber();
-        int secondAccountNumber = bankAccounts[1].getAccountNumber();
-        
-        
+        int firstAccountNumber = account1.getAccountNumber();
+        int secondAccountNumber = account2.getAccountNumber();
+
         assertEquals(2, customer.getBankAccounts().size());
         assertTrue(customer.getBankAccount(firstAccountNumber) instanceof BankAccount);
         assertTrue(customer.getBankAccount(secondAccountNumber) instanceof BankAccount);
@@ -60,22 +58,23 @@ public class CustomerTest {
 
     @Test
     public void testMultipleCustomersUniqueAccountNumbers() {
-        Customer customer1 = new Customer();
-        Customer customer2 = new Customer();
+        Customer customer1 = new Customer("user1");
+        Customer customer2 = new Customer("user2");
 
-        customer1.createBankAccount();
-        customer2.createBankAccount();
-
-        int accountNumber1 = customer1.getBankAccounts().iterator().next().getAccountNumber();
-        int accountNumber2 = customer2.getBankAccounts().iterator().next().getAccountNumber();
+        BankAccount account1 = new BankAccount();
+        BankAccount account2 = new BankAccount();
+        customer1.addBankAccount(account1);
+        customer2.addBankAccount(account2);
+        int accountNumber1 = account1.getAccountNumber();
+        int accountNumber2 = account2.getAccountNumber();
 
         assertNotEquals(accountNumber1, accountNumber2);
     }
 
     @Test
     public void testGetBankAccounts() {
-        customer.createBankAccount();
-        customer.createBankAccount();
+        customer.addBankAccount(new BankAccount());
+        customer.addBankAccount(new BankAccount());
 
         assertEquals(2, customer.getBankAccounts().size());
         assertTrue(customer.getBankAccounts().stream().allMatch(account -> account instanceof BankAccount));
@@ -83,75 +82,64 @@ public class CustomerTest {
 
     @Test
     public void testGetBankAccount(){
-        customer.createBankAccount();
-        int accountNumber = customer.getBankAccounts().iterator().next().getAccountNumber();
+        BankAccount account = new BankAccount();
+        customer.addBankAccount(account);
+        int accountNumber = account.getAccountNumber();
+
         assertTrue(customer.getBankAccount(accountNumber) instanceof BankAccount);
     }
 
     @Test
     public void testCloseBankAccount() {
-        customer.createBankAccount();
+        BankAccount account = new BankAccount();
+        customer.addBankAccount(account);
         assertTrue(customer.getBankAccounts().size() >= 1);
 
-        int accountNumber = customer.getBankAccounts().iterator().next().getAccountNumber();
+        int accountNumber = account.getAccountNumber();
 
-        assertTrue(customer.closeBankAccount(accountNumber));
+        assertTrue(customer.removeAccount(accountNumber));
         assertEquals(0, customer.getBankAccounts().size());
     }
 
     @Test
     public void testCloseNonExistentBankAccount() {
-        assertFalse(customer.closeBankAccount(2307));
+        assertFalse(customer.removeAccount(2307));
     }
 
    public void testCheckAccountBalanceOfZero() {
-       BankAccount account = customer.createBankAccount();
+    BankAccount account = new BankAccount();
+    customer.addBankAccount(account);
+    double balance = customer.checkAccountBalance(account.getAccountNumber());
 
-
-       double balance = customer.checkAccountBalance(account.getAccountNumber());
-
-
-       assertEquals(0,balance,.001);
+    assertEquals(0,balance,.001);
    }
 
    @Test
    public void testCheckAccountBalance() {
-       BankAccount account = customer.createBankAccount();
+    BankAccount account = new BankAccount();
+    customer.addBankAccount(account);
+    account.deposit(67);
+    account.deposit(25);
+    double balance = customer.checkAccountBalance(account.getAccountNumber());
 
-
-
-
-       account.deposit(67);
-       account.deposit(25);
-
-
-       double balance = customer.checkAccountBalance(account.getAccountNumber());
-
-
-       assertEquals(92,balance,.001);
+    assertEquals(92,balance,.001);
    }
 
    @Test
    public void testCheckAccountBalanceNoAccount() {
        int invalidAccountNumber = 2026;
-
-
-       try{
-           customer.checkAccountBalance(invalidAccountNumber);
-           fail();
-       } catch (IllegalArgumentException exception){
-        
-       }
+       try {
+            customer.checkAccountBalance(invalidAccountNumber);
+            fail();
+       } catch (IllegalArgumentException exception){}
    }
 
    @Test
     public void testCustomerWithdraw() {
-        BankAccount account = customer.createBankAccount();
-
+        BankAccount account = new BankAccount();
+        customer.addBankAccount(account);
         account.deposit(100);
-
-        customer.withdraw(account.getAccountNumber(),50);
-
+        customer.withdraw(account.getAccountNumber(), 50);
         double balance = account.getBalance();
 
         assertEquals(50,balance,.001);
@@ -159,15 +147,12 @@ public class CustomerTest {
 
      @Test
     public void testCustomerWithdrawMoreThanBalance() {
-        BankAccount account = customer.createBankAccount();
-
+        BankAccount account = new BankAccount();
+        customer.addBankAccount(account);
         account.deposit(100);
-
         try{
             customer.withdraw(account.getAccountNumber(), 1000);
             fail();
-        } catch (IllegalArgumentException exception){
-
-        }
+        } catch (IllegalArgumentException exception){}
     }
 }

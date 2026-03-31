@@ -1,10 +1,7 @@
 {
-    "java.project.sourcePaths": [
-        "lib",
-        "src"
-    ],
-    "java.project.referencedLibraries": [
-        "lib\\junit-platform-console-standalone-1.13.0-M3.jar",
-        "test-lib\\**\\*.jar"
-    ]
+  "java.project.sourcePaths": ["lib", "src"],
+  "java.project.referencedLibraries": [
+    "lib/gson-2.10.1.jar",
+    "/Users/daniel/CSE2307/project-bradley-max-daniel/test-lib/junit-platform-console-standalone-1.13.0-M3.jar"
+  ]
 }

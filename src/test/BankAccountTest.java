@@ -19,13 +19,12 @@ public class BankAccountTest {
 
     @Test
 public void testViewTransactionHistoryIndirectBothAccounts() {
-    sender.deposit(100);
-    sender.transfer(receiver, 50);
+    sender.deposit(100);    // sender: deposit transaction
+    sender.transfer(receiver, 50); // sender: transfer out transaction, receiver: transfer in transaction
 
     // sender history
-    assertEquals(1, sender.getTransactionHistory().size()); //confirming only 1 transaction in sender history
-    Transaction senderTransaction = sender.getTransactionHistory().get(0);
-
+    assertEquals(2, sender.getTransactionHistory().size());
+    Transaction senderTransaction = sender.getTransactionHistory().get(1);
     String expectedSender = "Transfer Out: $50.0 (Account " + receiver.getAccountNumber() + ")";
     assertEquals(expectedSender, senderTransaction.toString());
 
