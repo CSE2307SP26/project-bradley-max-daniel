@@ -13,6 +13,12 @@ public class BankAccount {
         this.balance = 0;
         this.transactionHistory = new ArrayList<>();
     }
+    // overloaded for Persistence layer
+    public BankAccount(int accountNumber, double balance) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.transactionHistory = new ArrayList<>();
+    }
 
     public void deposit(double amount) {
         if (amount > 0) {
@@ -35,20 +41,20 @@ public class BankAccount {
 
         try {
             this.balance -= amount;
-            targetAccount.deposit(amount);
+            targetAccount.balance += amount;
 
             this.transactionHistory.add(
-                    new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
+                new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
 
             targetAccount.getTransactionHistory().add(
-                    new Transaction("Transfer In", amount, this.getAccountNumber()));
+                new Transaction("Transfer In", amount, this.getAccountNumber()));
 
         } catch (Exception e) {
-            this.balance += amount; //did not use deposit method to avoid adding a failed transfer to the transaction history of the target account
-
+            this.balance += amount;
+            targetAccount.balance -= amount;
+            
             this.transactionHistory.add(
-                    new Transaction("Failed Transfer Out", amount, targetAccount.getAccountNumber()));
-
+                new Transaction("Failed Transfer Out", amount, targetAccount.getAccountNumber()));
             throw e;
         }
     }
