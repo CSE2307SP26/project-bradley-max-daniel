@@ -10,7 +10,7 @@ public class Customer {
     public Customer(String username) {
         this.username = username;
         this.bankAccounts = new ArrayList<>();
-        this.mortgage = mortgage;
+        this.mortgage = null;
     }
 
     public String getUsername() {
@@ -69,28 +69,20 @@ public class Customer {
         return account.getTransactionHistory();
     }
 
-    public void applyForMortgage(double loanAmount, double annualRate,
-            double termYears, double remainingAmount) {
-
+    public void applyForMortgage(double loanAmount, double annualRate, double termYears) {
         if (hasMortgage()) {
-            System.out.println("Customer is limited to a single mortgage");
-            return;
+            throw new IllegalStateException("Customer already has a mortgage");
         }
 
-        Mortgage mortgage = new Mortgage(loanAmount, annualRate, termYears, remainingAmount);
-        openMortgage(mortgage);
+        this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
     }
 
     public boolean hasMortgage() {
         return mortgage != null;
     }
 
-    public void openMortgage(Mortgage mortgage) {
-        this.mortgage = mortgage;
-    }
-
     public Mortgage getMortgage() {
-        return this.mortgage;
+        return mortgage;
     }
 
     public void makeMortgagePayment(double amount) {
@@ -101,7 +93,7 @@ public class Customer {
         mortgage.makePayment(amount);
 
         if (mortgage.isPaidOff()) {
-            mortgage = null;
+            mortgage = null; 
         }
     }
 }

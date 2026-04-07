@@ -11,7 +11,7 @@ public class MainMenu {
         final String LOGIN = "1";
         final String REGISTER = "2";
         final String EXIT = "3";
-        
+
         System.out.println("Welcome to the 237 Bank App!");
 
         while (true) {
@@ -20,7 +20,7 @@ public class MainMenu {
             System.out.println("2. Register");
             System.out.println("3. Exit");
             System.out.print("\nChoose an option: ");
-            
+
             String selection = scanner.nextLine();
             System.out.println();
 
@@ -97,7 +97,10 @@ public class MainMenu {
         final String WITHDRAW = "4";
         final String TRANSFER = "5";
         final String VIEW_HISTORY = "6";
-        final String SIGN_OUT = "7";
+        final String APPLY_MORTGAGE = "7";
+        final String VIEW_MORTGAGE = "8";
+        final String PAY_MORTGAGE = "9";
+        final String SIGN_OUT = "10";
 
         while (true) {
             System.out.println("\n===============================\n");
@@ -108,7 +111,10 @@ public class MainMenu {
             System.out.println("4. Withdraw");
             System.out.println("5. Transfer");
             System.out.println("6. View Transaction History");
-            System.out.println("7. Logout");
+            System.out.println("7. Apply for Mortgage");
+            System.out.println("8. View Mortgage");
+            System.out.println("9. Make Mortgage Payment");
+            System.out.println("10. Logout");
 
             System.out.print("\nChoose an option: ");
             String choice = scanner.nextLine();
@@ -133,6 +139,15 @@ public class MainMenu {
                 case VIEW_HISTORY:
                     viewTransactionHistory(customer);
                     break;
+                case APPLY_MORTGAGE:
+                    applyForMortgage(customer);
+                    break;
+                case VIEW_MORTGAGE:
+                    viewMortgage(customer);
+                    break;
+                case PAY_MORTGAGE:
+                    makeMortgagePayment(customer);
+                    break;
                 case SIGN_OUT:
                     Persistance.updateCustomer(customer);
                     System.out.println("You have successfully signed out.\n");
@@ -140,6 +155,74 @@ public class MainMenu {
                 default:
                     System.out.println("Invalid option. Try again.\n");
             }
+        }
+    }
+
+    private static void applyForMortgage(Customer customer) {
+        if (customer.hasMortgage()) {
+            System.out.println("You already have a mortgage.");
+            return;
+        }
+
+        try {
+            System.out.print("Enter loan amount: ");
+            double loanAmount = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter annual interest rate (example: 0.05 for 5%): ");
+            double annualRate = Double.parseDouble(scanner.nextLine());
+
+            System.out.print("Enter term in years: ");
+            double termYears = Double.parseDouble(scanner.nextLine());
+
+            customer.applyForMortgage(loanAmount, annualRate, termYears);
+            Persistance.updateCustomer(customer);
+
+            System.out.println("Mortgage application successful.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter numeric values.");
+        } catch (Exception e) {
+            System.out.println("Unable to apply for mortgage.");
+        }
+    }
+
+    private static void viewMortgage(Customer customer) {
+        if (!customer.hasMortgage()) {
+            System.out.println("You do not have a mortgage.");
+            return;
+        }
+
+        Mortgage mortgage = customer.getMortgage();
+
+        System.out.println("Mortgage Information:");
+        System.out.println("Loan Amount: $" + mortgage.getLoanAmount());
+        System.out.println("Annual Rate: " + mortgage.getAnnualRate());
+        System.out.println("Term (Years): " + mortgage.getTermYears());
+        System.out.println("Remaining Balance: $" + mortgage.getRemainingBalance());
+    }
+
+    private static void makeMortgagePayment(Customer customer) {
+        if (!customer.hasMortgage()) {
+            System.out.println("You do not have a mortgage.");
+            return;
+        }
+
+        try {
+            System.out.print("Enter payment amount: ");
+            double amount = Double.parseDouble(scanner.nextLine());
+
+            customer.makeMortgagePayment(amount);
+            Persistance.updateCustomer(customer);
+
+            if (customer.hasMortgage()) {
+                System.out.println("Mortgage payment successful.");
+                System.out.println("Remaining Balance: $" + customer.getMortgage().getRemainingBalance());
+            } else {
+                System.out.println("Mortgage fully paid off.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid amount. Please enter a number.");
+        } catch (Exception e) {
+            System.out.println("Unable to process mortgage payment.");
         }
     }
 
@@ -164,7 +247,7 @@ public class MainMenu {
     private static void deposit(Customer customer) {
         BankAccount account = selectAccount(customer);
 
-        if (account == null) { 
+        if (account == null) {
             return;
         }
 
@@ -263,7 +346,7 @@ public class MainMenu {
 
     private static void viewTransactionHistory(Customer customer) {
         BankAccount account = selectAccount(customer);
-        if (account == null) { 
+        if (account == null) {
             return;
         }
 
@@ -280,7 +363,8 @@ public class MainMenu {
         while (true) {
             System.out.println("Your bank accounts:\n");
             for (int i = 0; i < accounts.size(); i++) {
-                System.out.println((i + 1) + ". Account #" + accounts.get(i).getAccountNumber() + " ($" + accounts.get(i).getBalance() + ")");
+                System.out.println((i + 1) + ". Account #" + accounts.get(i).getAccountNumber() + " ($"
+                        + accounts.get(i).getBalance() + ")");
             }
             System.out.println((accounts.size() + 1) + ". Cancel");
 
@@ -293,7 +377,7 @@ public class MainMenu {
                 System.out.println("\nInvalid selection. Please try again.\n");
                 continue;
             }
-            
+
             // cancel
             if (selection == accounts.size()) {
                 return null;

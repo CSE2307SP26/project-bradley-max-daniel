@@ -135,7 +135,7 @@ public class CustomerTest {
    }
 
    @Test
-    public void testCustomerWithdraw() {
+    public void testCustomerWithdraw() { //withdraw method tests (improvement from iteration 1)
         BankAccount account = new BankAccount();
         customer.addBankAccount(account);
         account.deposit(100);

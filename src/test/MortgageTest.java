@@ -14,29 +14,31 @@ public class MortgageTest {
 
     @BeforeEach
     public void setUp() {
-        mortgage = new Mortgage(10000.0, 0.05, 10, 10000.0);
+        mortgage = new Mortgage(10000.0, 0.05, 10);
         customer = new Customer("max");
     }
 
     @Test
     public void testApplyForMortgageForCustomerWithoutMortgage() {
-        customer.applyForMortgage(10000.0, 0.05, 10, 10000.0);
+        customer.applyForMortgage(10000.0, 0.05, 10);
         assertTrue(customer.hasMortgage());
     }
 
     @Test
     public void testCustomerCannotHaveSecondMortgage() {
-        customer.openMortgage(mortgage);
+        customer.applyForMortgage(10000.0, 0.05, 10);
         Mortgage originalMortgage = customer.getMortgage();
 
-        customer.applyForMortgage(20000.0, 0.05, 10, 20000.0);
+        assertThrows(IllegalStateException.class, () -> {
+            customer.applyForMortgage(20000.0, 0.05, 10);
+        });
 
         assertSame(originalMortgage, customer.getMortgage());
     }
 
     @Test
     public void testGetRemainingMortgageBalance() {
-        customer.applyForMortgage(10000.0, 0.05, 10, 10000.0);
+        customer.applyForMortgage(10000.0, 0.05, 10);
         assertEquals(10000.0, customer.getMortgage().getRemainingBalance(), 0.00001);
     }
 
