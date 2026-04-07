@@ -5,10 +5,12 @@ import java.util.*;
 public class Customer {
     private String username;
     private List<BankAccount> bankAccounts;
+    private Mortgage mortgage;
 
     public Customer(String username) {
         this.username = username;
         this.bankAccounts = new ArrayList<>();
+        this.mortgage = mortgage;
     }
 
     public String getUsername() { 
@@ -64,5 +66,30 @@ public class Customer {
             return new ArrayList<>();
         }
         return account.getTransactionHistory();
+    }
+
+    public static void applyForMortgage(Customer customer, double loanAmount, double annualRate, 
+        double termYears, double remainingAmount){
+
+        if(customer.hasMortgage()){
+            System.out.println("Customer is limited to a single mortgage");
+            return;
+        }
+
+        Mortgage mortgage = new Mortgage(loanAmount, annualRate, termYears, remainingAmount);
+
+        customer.openMortgage(mortgage);
+    }
+
+    public boolean hasMortgage() {
+        return mortgage != null;
+    }
+
+    public void openMortgage(Mortgage mortgage){
+        this.mortgage = mortgage;
+    }
+
+    public Mortgage getMortgage(){
+        return this.mortgage;
     }
 }
