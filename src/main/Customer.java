@@ -1,24 +1,27 @@
 package main;
-import java.util.*;
 
+import java.util.*;
 
 public class Customer {
     private String username;
     private List<BankAccount> bankAccounts;
+    private Mortgage mortgage;
 
     public Customer(String username) {
         this.username = username;
         this.bankAccounts = new ArrayList<>();
+        this.mortgage = mortgage;
     }
 
-    public String getUsername() { 
-        return username; 
+    public String getUsername() {
+        return username;
     }
 
-    public List<BankAccount> getBankAccounts() { 
+    public List<BankAccount> getBankAccounts() {
         return bankAccounts;
     }
-    public void setBankAccounts(List<BankAccount> bankAccounts) { 
+
+    public void setBankAccounts(List<BankAccount> bankAccounts) {
         this.bankAccounts = bankAccounts;
     }
 
@@ -42,17 +45,17 @@ public class Customer {
         return null;
     }
 
-    public double checkAccountBalance(int accountNumber){
+    public double checkAccountBalance(int accountNumber) {
         BankAccount account = this.getBankAccount(accountNumber);
-        if(account == null){
+        if (account == null) {
             throw new IllegalArgumentException();
         }
         return account.getBalance();
     }
 
-    public void withdraw(int accountNumber, double amountToWithdraw){
+    public void withdraw(int accountNumber, double amountToWithdraw) {
         BankAccount account = this.getBankAccount(accountNumber);
-        if (account == null){
+        if (account == null) {
             throw new IllegalArgumentException();
         }
         account.withdraw(amountToWithdraw);
@@ -60,9 +63,45 @@ public class Customer {
 
     public List<Transaction> getTransactionHistory(int accountNumber) {
         BankAccount account = getBankAccount(accountNumber);
-        if (account == null) { 
+        if (account == null) {
             return new ArrayList<>();
         }
         return account.getTransactionHistory();
+    }
+
+    public void applyForMortgage(double loanAmount, double annualRate,
+            double termYears, double remainingAmount) {
+
+        if (hasMortgage()) {
+            System.out.println("Customer is limited to a single mortgage");
+            return;
+        }
+
+        Mortgage mortgage = new Mortgage(loanAmount, annualRate, termYears, remainingAmount);
+        openMortgage(mortgage);
+    }
+
+    public boolean hasMortgage() {
+        return mortgage != null;
+    }
+
+    public void openMortgage(Mortgage mortgage) {
+        this.mortgage = mortgage;
+    }
+
+    public Mortgage getMortgage() {
+        return this.mortgage;
+    }
+
+    public void makeMortgagePayment(double amount) {
+        if (!hasMortgage()) {
+            throw new IllegalStateException("Customer does not have a mortgage");
+        }
+
+        mortgage.makePayment(amount);
+
+        if (mortgage.isPaidOff()) {
+            mortgage = null;
+        }
     }
 }
