@@ -3,6 +3,8 @@ import main.BankAccount;
 import main.Transaction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -82,4 +84,49 @@ public void testViewTransactionHistoryIndirectBothAccounts() {
         assertEquals(0.0, sender.getBalance(), 0.0001);
         assertEquals(80.0, receiver.getBalance(), 0.0001);
     }
+
+     @Test
+    public void testDeposit() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        assertEquals(50, testAccount.getBalance(), 0.01);
+    }
+
+    @Test
+    public void testInvalidDeposit() {
+        BankAccount testAccount = new BankAccount();
+        try {
+            testAccount.deposit(-50);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //do nothing, test passes
+        }
+    }
+
+    @Test
+    public void testWithdraw() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        testAccount.withdraw(20);
+        
+        double testAccountBalance = testAccount.getBalance();
+
+        assertEquals(30, testAccountBalance, .001);
+    }
+
+
+    @Test
+    public void testWithdrawMoreThanBalance() {
+        BankAccount testAccount = new BankAccount();
+        testAccount.deposit(50);
+        
+        try {
+            testAccount.withdraw(200);
+            fail();
+        } catch (IllegalArgumentException e) {
+            //do nothing, test passes
+        }
+    }
+
+
 }
