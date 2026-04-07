@@ -6,11 +6,11 @@ public class Mortgage {
     private double termYears;
     private double remainingAmount;
 
-    public Mortgage(double loanAmount, double annualRate, double termYears, double remainingAmount) {
+    public Mortgage(double loanAmount, double annualRate, double termYears) {
         this.loanAmount = loanAmount;
         this.annualRate = annualRate;
         this.termYears = termYears;
-        this.remainingAmount = remainingAmount;
+        this.remainingAmount = loanAmount;
     }
 
     public double getLoanAmount() {
@@ -34,11 +34,7 @@ public class Mortgage {
             throw new IllegalArgumentException("Payment must be greater than 0");
         }
 
-        if (amount >= remainingAmount) {
-            remainingAmount = 0;
-        } else {
-            remainingAmount -= amount;
-        }
+        remainingAmount = Math.max(0, remainingAmount - amount);
     }
 
     public boolean isPaidOff() {

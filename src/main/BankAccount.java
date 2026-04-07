@@ -13,6 +13,7 @@ public class BankAccount {
         this.balance = 0;
         this.transactionHistory = new ArrayList<>();
     }
+
     // overloaded for Persistence layer
     public BankAccount(int accountNumber, double balance) {
         this.accountNumber = accountNumber;
@@ -34,29 +35,29 @@ public class BankAccount {
         return transactionHistory;
     }
 
-    public void transfer(BankAccount targetAccount, double amount) {
-        if (amount <= 0 || this.balance < amount) {
+    //improvement from iteration: shortened transfer method
+
+    public void transfer(BankAccount target, double amount) {
+        if (amount <= 0 || balance < amount)
             throw new IllegalArgumentException();
-        }
+
+        balance -= amount;
+        target.balance += amount;
 
         try {
-            this.balance -= amount;
-            targetAccount.balance += amount;
-
-            this.transactionHistory.add(
-                new Transaction("Transfer Out", amount, targetAccount.getAccountNumber()));
-
-            targetAccount.getTransactionHistory().add(
-                new Transaction("Transfer In", amount, this.getAccountNumber()));
-
+            addTransaction("Transfer Out", amount, target);
+            target.addTransaction("Transfer In", amount, this);
         } catch (Exception e) {
-            this.balance += amount;
-            targetAccount.balance -= amount;
-            
-            this.transactionHistory.add(
-                new Transaction("Failed Transfer Out", amount, targetAccount.getAccountNumber()));
+            balance += amount;
+            target.balance -= amount;
+            addTransaction("Failed Transfer Out", amount, target);
             throw e;
         }
+    }
+
+    private void addTransaction(String type, double amount, BankAccount other) {
+        transactionHistory.add(
+                new Transaction(type, amount, other.getAccountNumber()));
     }
 
     public void withdraw(double amountToWithdraw) {
