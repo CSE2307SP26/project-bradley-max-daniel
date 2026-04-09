@@ -79,6 +79,18 @@ public class MortgageTest {
         assertThrows(IllegalArgumentException.class, () -> mortgage.makePayment(-100.0));
     }
 
+    @Test
+    public void testIsPaidOffFalseWhenBalanceRemains() {
+        mortgage.makePayment(3000.0);
+        assertFalse(mortgage.isPaidOff());
+    }
+
+    @Test
+    public void testIsPaidOffTrueWhenBalanceIsZero() {
+        mortgage.makePayment(10000.0);
+        assertTrue(mortgage.isPaidOff());
+    }
+
 
 
 }

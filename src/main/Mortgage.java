@@ -36,5 +36,9 @@ public class Mortgage {
 
         remainingAmount = Math.max(0, remainingAmount - amount);
     }
+    
+     public boolean isPaidOff() {
+        return remainingAmount == 0;
+    }
 
 }
