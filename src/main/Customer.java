@@ -73,12 +73,10 @@ public class Customer {
         if (hasMortgage()) {
             throw new IllegalStateException("Customer already has a mortgage");
         }
- 
- 
+
         this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
     }
- 
- 
+
     public boolean hasMortgage() {
         return mortgage != null;
     }
@@ -87,17 +85,22 @@ public class Customer {
         return mortgage;
     }
 
-    public void makeMortgagePayment(double amount) {
+    public void makeMortgagePayment(int accountNumber, double amount) {
         if (!hasMortgage()) {
             throw new IllegalStateException("Customer does not have a mortgage");
         }
 
+        BankAccount account = getBankAccount(accountNumber);
+        if (account == null) {
+            throw new IllegalArgumentException("Bank account not found");
+        }
+
+        account.withdraw(amount);
         mortgage.makePayment(amount);
 
         if (mortgage.isPaidOff()) {
-            mortgage = null; 
+            mortgage = null;
         }
     }
 
- 
 }
