@@ -15,6 +15,26 @@ public class Mortgage {
        this.remainingAmount = loanAmount;
    }
 
+   public double getLoanAmount() {
+    return loanAmount;
+}
+
+
+public double getAnnualRate() {
+    return annualRate;
+}
+
+
+public double getTermYears() {
+    return termYears;
+}
+
+
+public double getRemainingBalance() {
+    return remainingAmount;
+}
+
+
 
 }
 

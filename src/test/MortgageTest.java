@@ -45,5 +45,12 @@ public class MortgageTest {
        assertSame(originalMortgage, customer.getMortgage());
    }
 
+   @Test
+   public void testGetRemainingMortgageBalance() {
+       customer.applyForMortgage(10000.0, 0.05, 10);
+       assertEquals(10000.0, customer.getMortgage().getRemainingBalance(), 0.00001);
+   }
+
+
 }
 
