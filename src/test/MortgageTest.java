@@ -51,6 +51,35 @@ public class MortgageTest {
        assertEquals(10000.0, customer.getMortgage().getRemainingBalance(), 0.00001);
    }
 
+   @Test
+    public void testMakePaymentReducesRemainingBalance() {
+        mortgage.makePayment(2500.0);
+        assertEquals(7500.0, mortgage.getRemainingBalance(), 0.00001);
+    }
+
+    @Test
+    public void testMakePaymentEqualToRemainingPaysOffMortgage() {
+        mortgage.makePayment(10000.0);
+        assertEquals(0.0, mortgage.getRemainingBalance(), 0.00001);
+    }
+
+    @Test
+    public void testMakePaymentGreaterThanRemainingSetsBalanceToZero() {
+        mortgage.makePayment(12000.0);
+        assertEquals(0.0, mortgage.getRemainingBalance(), 0.00001);
+    }
+
+    @Test
+    public void testMakePaymentWithZeroThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> mortgage.makePayment(0.0));
+    }
+
+    @Test
+    public void testMakePaymentWithNegativeAmountThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> mortgage.makePayment(-100.0));
+    }
+
+
 
 }
 
