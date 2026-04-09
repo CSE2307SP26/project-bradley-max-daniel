@@ -17,14 +17,14 @@
 ### What user stories do you intend to complete next iteration?
 
 - Bradley:
-  - TBD
-  - TBD
+  - A customer should be able to apply for a mortgage
+  - A customer should be able to check their remaining mortgage balance
 - Daniel:
   - A customer should be able to sign in and sign out of their bank account.
   - A customer's data should persist across multiple sessions
 - Max:
-  - TBD
-  - TBD
+  - A customer should be able to pay off a mortgage
+  - A customer should have no mortgage if it has been paid off
 
 ### Is there anything that you implemented but doesn't currently work?
 
