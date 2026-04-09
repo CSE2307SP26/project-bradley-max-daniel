@@ -69,31 +69,4 @@ public class Customer {
         return account.getTransactionHistory();
     }
 
-    public void applyForMortgage(double loanAmount, double annualRate, double termYears) {
-        if (hasMortgage()) {
-            throw new IllegalStateException("Customer already has a mortgage");
-        }
-
-        this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
-    }
-
-    public boolean hasMortgage() {
-        return mortgage != null;
-    }
-
-    public Mortgage getMortgage() {
-        return mortgage;
-    }
-
-    public void makeMortgagePayment(double amount) {
-        if (!hasMortgage()) {
-            throw new IllegalStateException("Customer does not have a mortgage");
-        }
-
-        mortgage.makePayment(amount);
-
-        if (mortgage.isPaidOff()) {
-            mortgage = null; 
-        }
-    }
 }
