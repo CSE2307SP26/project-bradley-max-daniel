@@ -86,5 +86,18 @@ public class Customer {
     public Mortgage getMortgage() {
         return mortgage;
     }
+
+    public void makeMortgagePayment(double amount) {
+        if (!hasMortgage()) {
+            throw new IllegalStateException("Customer does not have a mortgage");
+        }
+
+        mortgage.makePayment(amount);
+
+        if (mortgage.isPaidOff()) {
+            mortgage = null; 
+        }
+    }
+
  
 }
