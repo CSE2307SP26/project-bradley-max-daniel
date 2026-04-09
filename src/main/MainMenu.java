@@ -207,10 +207,13 @@ public class MainMenu {
         }
 
         try {
+            System.out.print("Enter bank account number: ");
+            int accountNumber = Integer.parseInt(scanner.nextLine());
+
             System.out.print("Enter payment amount: ");
             double amount = Double.parseDouble(scanner.nextLine());
 
-            customer.makeMortgagePayment(amount);
+            customer.makeMortgagePayment(accountNumber, amount);
             Persistance.updateCustomer(customer);
 
             if (customer.hasMortgage()) {
@@ -220,7 +223,7 @@ public class MainMenu {
                 System.out.println("Mortgage fully paid off.");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid amount. Please enter a number.");
+            System.out.println("Invalid input. Please enter a valid number.");
         } catch (Exception e) {
             System.out.println("Unable to process mortgage payment.");
         }
