@@ -69,4 +69,22 @@ public class Customer {
         return account.getTransactionHistory();
     }
 
+    public void applyForMortgage(double loanAmount, double annualRate, double termYears) {
+        if (hasMortgage()) {
+            throw new IllegalStateException("Customer already has a mortgage");
+        }
+ 
+ 
+        this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
+    }
+ 
+ 
+    public boolean hasMortgage() {
+        return mortgage != null;
+    }
+
+    public Mortgage getMortgage() {
+        return mortgage;
+    }
+ 
 }
