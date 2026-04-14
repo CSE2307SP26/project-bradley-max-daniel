@@ -1,0 +1,64 @@
+package test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import main.BankAccount;
+import main.Customer;
+
+public class CreditScoreTest {
+
+    private Customer max;
+
+    @BeforeEach
+    public void setUp() {
+        max = new Customer("max");
+    }
+
+    @Test
+    public void testInitialCreditScore() {
+        assertEquals(650, max.getCreditScore());
+    }
+
+    @Test
+    public void testLowBalanceNoMortgage() {
+        max.updateCreditScore();
+        assertEquals(630, max.getCreditScore());
+    }
+
+    @Test
+    public void testMediumBalanceNoMortgage() {
+        BankAccount acc = new BankAccount();
+        acc.deposit(6000);
+        max.addBankAccount(acc);
+
+        max.updateCreditScore();
+
+        assertEquals(710, max.getCreditScore());
+    }
+
+    @Test
+    public void testHighBalanceNoMortgage() {
+        BankAccount acc = new BankAccount();
+        acc.deposit(12000);
+        max.addBankAccount(acc);
+
+        max.updateCreditScore();
+
+        assertEquals(730, max.getCreditScore());
+    }
+
+    @Test
+    public void testWithMortgage() {
+        BankAccount acc = new BankAccount();
+        acc.deposit(12000);
+        max.addBankAccount(acc);
+        max.applyForMortgage(200000, 0.05, 30);
+
+        max.updateCreditScore();
+
+        assertEquals(680, max.getCreditScore());
+    }
+}
