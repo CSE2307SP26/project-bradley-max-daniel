@@ -6,6 +6,8 @@ import java.util.Scanner;
 public class MainMenu {
     private static Scanner scanner = new Scanner(System.in);
     private static AuthManager auth = new AuthManager();
+    private static final String CUSTOMERS_FILE = "data/customers.json";
+    private static Persistence persistence = new Persistence(CUSTOMERS_FILE);
 
     public static void main(String[] args) {
         final String LOGIN = "1";
@@ -13,6 +15,10 @@ public class MainMenu {
         final String EXIT = "3";
 
         System.out.println("Welcome to the 237 Bank App!");
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            persistence.save();
+        }));
 
         while (true) {
             System.out.println("\n===============================\n");
@@ -32,6 +38,7 @@ public class MainMenu {
                     register();
                     break;
                 case EXIT:
+                    persistence.save();
                     System.out.println("Goodbye!");
                     return;
                 default:
@@ -54,10 +61,10 @@ public class MainMenu {
                 return;
             }
 
-            Customer customer = Persistance.getCustomer(username);
+            Customer customer = persistence.getCustomer(username);
             if (customer == null) {
                 customer = new Customer(username);
-                Persistance.updateCustomer(customer);
+                persistence.updateCustomer(customer);
             }
 
             customerMenu(customer);
@@ -81,7 +88,7 @@ public class MainMenu {
             }
 
             Customer customer = new Customer(username);
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
             System.out.println("Registration successful!\n");
 
             customerMenu(customer);
@@ -149,7 +156,7 @@ public class MainMenu {
                     makeMortgagePayment(customer);
                     break;
                 case SIGN_OUT:
-                    Persistance.updateCustomer(customer);
+                    persistence.updateCustomer(customer);
                     System.out.println("You have successfully signed out.\n");
                     return;
                 default:
@@ -175,7 +182,7 @@ public class MainMenu {
             double termYears = Double.parseDouble(scanner.nextLine());
 
             customer.applyForMortgage(loanAmount, annualRate, termYears);
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
 
             System.out.println("Mortgage application successful.");
         } catch (NumberFormatException e) {
@@ -214,7 +221,7 @@ public class MainMenu {
             double amount = Double.parseDouble(scanner.nextLine());
 
             customer.makeMortgagePayment(accountNumber, amount);
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
 
             if (customer.hasMortgage()) {
                 System.out.println("Mortgage payment successful.");
@@ -243,7 +250,7 @@ public class MainMenu {
     private static void createAccount(Customer customer) {
         BankAccount newAccount = new BankAccount();
         customer.addBankAccount(newAccount);
-        Persistance.updateCustomer(customer);
+        persistence.updateCustomer(customer);
         System.out.println("New account opened. Account #" + newAccount.getAccountNumber());
     }
 
@@ -258,7 +265,7 @@ public class MainMenu {
         double amount = Double.parseDouble(scanner.nextLine());
         try {
             account.deposit(amount);
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
             System.out.println("You have successfully deposited $" + amount);
         } catch (Exception e) {
             System.out.println("ERROR: Unable to deposit. Please try again.");
@@ -276,7 +283,7 @@ public class MainMenu {
         double amount = Double.parseDouble(scanner.nextLine());
         try {
             account.withdraw(amount);
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
             System.out.println("You have successfully withdrawn $" + amount);
         } catch (Exception e) {
             System.out.println("ERROR: Unable to withdraw. Please check your balance and try again.");
@@ -309,7 +316,7 @@ public class MainMenu {
         } else {
             // customer is transferring to another customer --> fetch from DB
             // result = [Customer, BankAccount]
-            Object[] result = Persistance.findBankAccount(targetAccountNumber);
+            Object[] result = persistence.findBankAccount(targetAccountNumber);
 
             if (result == null) {
                 System.out.println("Invalid account number. Please try again.");
@@ -333,11 +340,11 @@ public class MainMenu {
         try {
             fromAccount.transfer(toAccount, amount);
 
-            Persistance.updateCustomer(customer);
+            persistence.updateCustomer(customer);
 
             if (recipient != customer) {
                 // only update recipient in DB if transferring to another customer
-                Persistance.updateCustomer(recipient);
+                persistence.updateCustomer(recipient);
             }
 
             System.out.println("Successfully transferred $" + amount + " to account #" + targetAccountNumber);
