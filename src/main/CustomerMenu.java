@@ -20,10 +20,11 @@ public class CustomerMenu {
         final String WITHDRAW = "4";
         final String TRANSFER = "5";
         final String VIEW_HISTORY = "6";
-        final String APPLY_MORTGAGE = "7";
-        final String VIEW_MORTGAGE = "8";
-        final String PAY_MORTGAGE = "9";
-        final String SIGN_OUT = "10";
+        final String EDIT_NICKNAME = "7";
+        final String APPLY_MORTGAGE = "8";
+        final String VIEW_MORTGAGE = "9";
+        final String PAY_MORTGAGE = "10";
+        final String SIGN_OUT = "11";
 
         while (true) {
             System.out.println("\n===============================\n");
@@ -34,10 +35,11 @@ public class CustomerMenu {
             System.out.println("4. Withdraw");
             System.out.println("5. Transfer");
             System.out.println("6. View Transaction History");
-            System.out.println("7. Apply for Mortgage");
-            System.out.println("8. View Mortgage");
-            System.out.println("9. Make Mortgage Payment");
-            System.out.println("10. Logout");
+            System.out.println("7. Edit Account Nickname");
+            System.out.println("8. Apply for Mortgage");
+            System.out.println("9. View Mortgage");
+            System.out.println("10. Make Mortgage Payment");
+            System.out.println("11. Logout");
 
             System.out.print("\nChoose an option: ");
             String choice = scanner.nextLine();
@@ -61,6 +63,9 @@ public class CustomerMenu {
                     break;
                 case VIEW_HISTORY:
                     bankService.viewTransactionHistory(customer);
+                    break;
+                case EDIT_NICKNAME:
+                    bankService.editAccountNickname(customer);
                     break;
                 case APPLY_MORTGAGE:
                     bankService.applyForMortgage(customer);

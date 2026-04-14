@@ -2,6 +2,7 @@ package test;
 import main.BankAccount;
 import main.Transaction;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -126,6 +127,17 @@ public void testViewTransactionHistoryIndirectBothAccounts() {
         } catch (IllegalArgumentException e) {
             //do nothing, test passes
         }
+    }
+
+    @Test
+    public void testSetAndGetNickname() {
+        BankAccount acc = new BankAccount();
+
+        assertNull(acc.getNickname());
+
+        
+        acc.setNickname("Emergency Fund");
+        assertEquals("Emergency Fund", acc.getNickname());
     }
 
 
