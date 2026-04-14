@@ -6,11 +6,13 @@ public class Customer {
     private String username;
     private List<BankAccount> bankAccounts;
     private Mortgage mortgage;
+    private int creditScore;
 
     public Customer(String username) {
         this.username = username;
         this.bankAccounts = new ArrayList<>();
         this.mortgage = null;
+        this.creditScore = 650; // Default credit score
     }
 
     public String getUsername() {
@@ -101,6 +103,10 @@ public class Customer {
         if (mortgage.isPaidOff()) {
             mortgage = null;
         }
+    }
+
+    public int getCreditScore() {
+        return creditScore;
     }
 
 }
