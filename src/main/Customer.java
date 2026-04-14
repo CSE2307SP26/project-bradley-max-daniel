@@ -6,11 +6,13 @@ public class Customer {
     private String username;
     private List<BankAccount> bankAccounts;
     private Mortgage mortgage;
+    private int creditScore;
 
     public Customer(String username) {
         this.username = username;
         this.bankAccounts = new ArrayList<>();
         this.mortgage = null;
+        this.creditScore = 650; // Default credit score
     }
 
     public String getUsername() {
@@ -101,6 +103,54 @@ public class Customer {
         if (mortgage.isPaidOff()) {
             mortgage = null;
         }
+    }
+
+    public int getCreditScore() {
+        return creditScore;
+    }
+
+    public void updateCreditScore() {
+        int score = 650;
+
+        score += balanceScoreAdjustment();
+        score += mortgageScoreAdjustment();
+
+        this.creditScore = clampScore(score);
+    }
+
+    private int balanceScoreAdjustment() {
+        double totalBalance = getTotalBalance();
+
+        if (totalBalance > 10000)
+            return 50;
+        if (totalBalance > 5000)
+            return 30;
+        if (totalBalance < 1000)
+            return -50;
+        return 0;
+    }
+
+    private int mortgageScoreAdjustment() {
+        if (hasMortgage()) {
+            return mortgage.getRemainingBalance() > 0 ? -20 : 0;
+        }
+        return 30;
+    }
+
+    private double getTotalBalance() {
+        double total = 0;
+        for (BankAccount acc : bankAccounts) {
+            total += acc.getBalance();
+        }
+        return total;
+    }
+
+    private int clampScore(int score) {
+        if (score < 300)
+            return 300;
+        if (score > 850)
+            return 850;
+        return score;
     }
 
 }
