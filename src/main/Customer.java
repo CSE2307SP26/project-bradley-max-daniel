@@ -105,8 +105,14 @@ public class Customer {
         }
     }
 
+
     public int getCreditScore() {
         return creditScore;
+    }
+
+    // Test-only setter for credit score
+    public void setCreditScore(int score) {
+        this.creditScore = score;
     }
 
     public void updateCreditScore() {
