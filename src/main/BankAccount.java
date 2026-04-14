@@ -81,9 +81,15 @@ public class BankAccount {
         this.transactionHistory.add(new Transaction("Withdrawal", amountToWithdraw, this.accountNumber));
     }
 
-    public void viewTransactionHistory() {
-        for (Transaction t : transactionHistory) {
-            System.out.println(t);
+    public void viewTransactionHistory(String type) {
+        boolean filtered = type != null && !type.isEmpty();
+        long transactionCount = transactionHistory.stream()
+            .filter(t -> !filtered || t.getType().equalsIgnoreCase(type))
+            .peek(System.out::println)
+            .count();
+            
+        if (transactionCount == 0) {
+            System.out.println("No transactions found.");
         }
     }
 

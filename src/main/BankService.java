@@ -192,7 +192,41 @@ public class BankService {
         if (account == null) {
             return;
         }
-        account.viewTransactionHistory();
+        
+        while (true) {
+            System.out.println("\n===============================\n");
+            System.out.println("Please select an option before viewing your account's transaction history:\n");
+            System.out.println("1. View ALL transactions");
+            System.out.println("2. View deposits only");
+            System.out.println("3. View withdrawals only");
+            System.out.println("4. View transfers IN only");
+            System.out.println("5. View transfers OUT only");
+            System.out.println("6. Cancel");
+            System.out.print("\nChoose an option: ");
+
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1":
+                    account.viewTransactionHistory(null);
+                    return;
+                case "2":
+                    account.viewTransactionHistory("Deposit");
+                    return;
+                case "3":
+                    account.viewTransactionHistory("Withdrawal");
+                    return;
+                case "4":
+                    account.viewTransactionHistory("Transfer In");
+                    return;
+                case "5":
+                    account.viewTransactionHistory("Transfer Out");
+                    return;
+                case "6":
+                    return;
+                default:
+                    System.out.println("Invalid selection. Please try again.");
+            }
+        }
     }
 
     public BankAccount selectAccount(Customer customer) {
