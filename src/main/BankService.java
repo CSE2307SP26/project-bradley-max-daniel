@@ -12,6 +12,19 @@ public class BankService {
         this.scanner = scanner;
     }
 
+    public void editAccountNickname(Customer customer) {
+        BankAccount account = selectAccount(customer);
+        if (account == null) {
+            return;
+        }
+
+        System.out.print("Enter a nickname for Account #" + account.getAccountNumber() + ": ");
+        String nickname = scanner.nextLine();
+        account.setNickname(nickname);
+        persistence.updateCustomer(customer);
+        System.out.println("Successfully updated account #" + account.getAccountNumber() + " to have the nickname " + account.getNickname());
+    }
+
     public void applyForMortgage(Customer customer) {
         if (customer.hasMortgage()) {
             System.out.println("You already have a mortgage.");
@@ -79,7 +92,12 @@ public class BankService {
             return;
         }
         for (BankAccount acc : accounts) {
-            System.out.println("Account #" + acc.getAccountNumber() + ": Balance $" + acc.getBalance());
+            String nickname = acc.getNickname();
+            String display = "Account #" + acc.getAccountNumber() + ": Balance $" + acc.getBalance();
+            if (nickname != null && !nickname.isEmpty()) {
+                display += " (" + nickname + ")";
+            }
+            System.out.println(display);
         }
     }
 
