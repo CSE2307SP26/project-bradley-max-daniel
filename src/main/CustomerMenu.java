@@ -24,7 +24,8 @@ public class CustomerMenu {
         final String APPLY_MORTGAGE = "8";
         final String VIEW_MORTGAGE = "9";
         final String PAY_MORTGAGE = "10";
-        final String SIGN_OUT = "11";
+        final String VIEW_CREDIT_SCORE = "11";
+        final String SIGN_OUT = "12";
 
         while (true) {
             System.out.println("\n===============================\n");
@@ -39,7 +40,8 @@ public class CustomerMenu {
             System.out.println("8. Apply for Mortgage");
             System.out.println("9. View Mortgage");
             System.out.println("10. Make Mortgage Payment");
-            System.out.println("11. Logout");
+            System.out.println("11. View Credit Score");
+            System.out.println("12. Logout");
 
             System.out.print("\nChoose an option: ");
             String choice = scanner.nextLine();
@@ -75,6 +77,9 @@ public class CustomerMenu {
                     break;
                 case PAY_MORTGAGE:
                     bankService.makeMortgagePayment(customer);
+                    break;
+                case VIEW_CREDIT_SCORE:
+                    System.out.println("Your credit score is: " + customer.getCreditScore());
                     break;
                 case SIGN_OUT:
                     persistence.updateCustomer(customer);

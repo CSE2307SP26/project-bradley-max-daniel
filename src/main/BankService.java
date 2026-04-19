@@ -104,6 +104,7 @@ public class BankService {
     public void createAccount(Customer customer) {
         BankAccount newAccount = new BankAccount();
         customer.addBankAccount(newAccount);
+        customer.updateCreditScore();
         persistence.updateCustomer(customer);
         System.out.println("New account opened. Account #" + newAccount.getAccountNumber());
     }
@@ -117,6 +118,7 @@ public class BankService {
         double amount = Double.parseDouble(scanner.nextLine());
         try {
             account.deposit(amount);
+            customer.updateCreditScore();
             persistence.updateCustomer(customer);
             System.out.println("You have successfully deposited $" + amount);
         } catch (Exception e) {
@@ -133,6 +135,7 @@ public class BankService {
         double amount = Double.parseDouble(scanner.nextLine());
         try {
             account.withdraw(amount);
+            customer.updateCreditScore();
             persistence.updateCustomer(customer);
             System.out.println("You have successfully withdrawn $" + amount);
         } catch (Exception e) {
@@ -177,6 +180,7 @@ public class BankService {
         }
         try {
             fromAccount.transfer(toAccount, amount);
+            customer.updateCreditScore();
             persistence.updateCustomer(customer);
             if (recipient != customer) {
                 persistence.updateCustomer(recipient);

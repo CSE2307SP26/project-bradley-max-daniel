@@ -77,6 +77,7 @@ public class Customer {
         }
 
         this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
+        updateCreditScore();
     }
 
     public boolean hasMortgage() {
@@ -103,6 +104,7 @@ public class Customer {
         if (mortgage.isPaidOff()) {
             mortgage = null;
         }
+        updateCreditScore();
     }
 
 
