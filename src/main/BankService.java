@@ -22,7 +22,8 @@ public class BankService {
         String nickname = scanner.nextLine();
         account.setNickname(nickname);
         persistence.updateCustomer(customer);
-        System.out.println("Successfully updated account #" + account.getAccountNumber() + " to have the nickname " + account.getNickname());
+        System.out.println("Successfully updated account #" + account.getAccountNumber() + " to have the nickname "
+                + account.getNickname());
     }
 
     public void applyForMortgage(Customer customer) {
@@ -145,47 +146,79 @@ public class BankService {
 
     public void transfer(Customer customer) {
         BankAccount fromAccount = selectAccount(customer);
-        if (fromAccount == null) {
+        if (fromAccount == null)
             return;
-        }
+
+        Integer targetNumber = readTargetAccountNumber();
+        if (targetNumber == null)
+            return;
+
+        Object[] target = findTransferTarget(customer, targetNumber);
+        if (target == null)
+            return;
+
+        Double amount = readTransferAmount();
+        if (amount == null)
+            return;
+
+        completeTransfer(customer, fromAccount, target, amount, targetNumber);
+    }
+
+    private Integer readTargetAccountNumber() {
         System.out.print("Enter the account number you would like to transfer to: ");
-        int targetAccountNumber;
         try {
-            targetAccountNumber = Integer.parseInt(scanner.nextLine());
+            return Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Invalid account number. Please try again.");
-            return;
+            return null;
         }
-        BankAccount toAccount = null;
-        Customer recipient = null;
-        toAccount = customer.getBankAccount(targetAccountNumber);
+    }
+
+    private Object[] findTransferTarget(Customer customer, int targetNumber) {
+        BankAccount toAccount = customer.getBankAccount(targetNumber);
+
         if (toAccount != null) {
-            recipient = customer;
-        } else {
-            Object[] result = persistence.findBankAccount(targetAccountNumber);
-            if (result == null) {
-                System.out.println("Invalid account number. Please try again.");
-                return;
-            }
-            recipient = (Customer) result[0];
-            toAccount = (BankAccount) result[1];
+            return new Object[] { customer, toAccount };
         }
+
+        Object[] result = persistence.findBankAccount(targetNumber);
+
+        if (result == null) {
+            System.out.println("Invalid account number. Please try again.");
+            return null;
+        }
+
+        return result;
+    }
+
+    private Double readTransferAmount() {
         System.out.print("How much would you like to transfer: $");
-        double amount;
         try {
-            amount = Double.parseDouble(scanner.nextLine());
+            return Double.parseDouble(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.println("Invalid amount. Please try again.");
-            return;
+            return null;
         }
+    }
+
+    private void completeTransfer(Customer customer, BankAccount fromAccount,
+            Object[] target, double amount, int targetNumber) {
+        Customer recipient = (Customer) target[0];
+        BankAccount toAccount = (BankAccount) target[1];
+
         try {
             fromAccount.transfer(toAccount, amount);
             customer.updateCreditScore();
             persistence.updateCustomer(customer);
+
             if (recipient != customer) {
+                recipient.updateCreditScore();
                 persistence.updateCustomer(recipient);
             }
-            System.out.println("Successfully transferred $" + amount + " to account #" + targetAccountNumber);
+
+            System.out.println("Successfully transferred $" + amount +
+                    " to account #" + targetNumber);
+
         } catch (Exception e) {
             System.out.println("Failed to transfer. Please check your balance and try again.");
         }
@@ -196,7 +229,7 @@ public class BankService {
         if (account == null) {
             return;
         }
-        
+
         while (true) {
             System.out.println("\n===============================\n");
             System.out.println("Please select an option before viewing your account's transaction history:\n");
