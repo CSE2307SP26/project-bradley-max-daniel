@@ -8,9 +8,34 @@
 
 ### What commands are needed to compile and run your code from the command line?
 
+Running the app:
 `chmod +x runApp.sh`
 
 `./runApp.sh`
+
+Running the tests:
+`chmod +x runTests.sh`
+`./runTests.sh`
+
+## Iteration 3
+
+### What user stories do you intend to complete next iteration?
+
+- Bradley:
+  - A customer's credit score can affect their mortgage eligibility
+  - A customer's credit score can affect the interest rate that they get
+- Daniel:
+  - A customer should be able to assign nicknames to bank accounts (i.e. “Vacation Fund”, “Emergency Fund”)
+  - A customer should be able to search/filter their transaction history by transaction type
+  - (FIX): A customer's data should persist across multiple sessions and operations should be rapid (Fixing Persistence class to NOT read from the file every operation)
+  - (FIX): Refactored the Main Menu class to only contain Main Menu related functions. Created additional classes to handle business logic
+- Max:
+  - A customer should be able to check their credit score
+  - A customer's credit score should increase when they pay off their mortgage
+
+### Is there anything that you implemented but doesn't currently work?
+
+No.
 
 ## Iteration 2
 

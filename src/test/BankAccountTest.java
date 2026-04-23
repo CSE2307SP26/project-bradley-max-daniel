@@ -2,6 +2,7 @@ package test;
 import main.BankAccount;
 import main.Transaction;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -126,6 +127,49 @@ public void testViewTransactionHistoryIndirectBothAccounts() {
         } catch (IllegalArgumentException e) {
             //do nothing, test passes
         }
+    }
+
+    @Test
+    public void testSetAndGetNickname() {
+        BankAccount acc = new BankAccount();
+
+        assertNull(acc.getNickname());
+
+        
+        acc.setNickname("Emergency Fund");
+        assertEquals("Emergency Fund", acc.getNickname());
+    }
+
+    @Test
+    public void testTransactionHistoryFiltering() {
+        BankAccount acc1 = new BankAccount();
+        acc1.deposit(100);
+        acc1.withdraw(20);
+
+        BankAccount acc2 = new BankAccount();
+        acc1.transfer(acc2, 30);
+
+        assertEquals(3, acc1.getTransactionHistory().size());
+
+        // filter: deposit
+        long depositCount = acc1.getTransactionHistory().stream()
+            .filter(t -> t.getType().equalsIgnoreCase("Deposit")).count();
+        assertEquals(1, depositCount);
+
+        // filter: withdrawal
+        long withdrawalCount = acc1.getTransactionHistory().stream()
+            .filter(t -> t.getType().equalsIgnoreCase("Withdrawal")).count();
+        assertEquals(1, withdrawalCount);
+
+        // filter: transfer out
+        long transferOutCount = acc1.getTransactionHistory().stream()
+            .filter(t -> t.getType().equalsIgnoreCase("Transfer Out")).count();
+        assertEquals(1, transferOutCount);
+
+        // filter: transfer in
+        long transferInCount = acc2.getTransactionHistory().stream()
+            .filter(t -> t.getType().equalsIgnoreCase("Transfer In")).count();
+        assertEquals(1, transferInCount);
     }
 
 

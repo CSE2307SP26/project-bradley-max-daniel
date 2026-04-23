@@ -7,11 +7,13 @@ public class BankAccount {
     private double balance;
     private int accountNumber;
     private ArrayList<Transaction> transactionHistory;
+    private String nickname;
 
     public BankAccount() {
         this.accountNumber = nextAvailableAccountNumber++; // increment account number for uniqueness
         this.balance = 0;
         this.transactionHistory = new ArrayList<>();
+        this.nickname = null;
     }
 
     // overloaded for Persistence layer
@@ -19,6 +21,15 @@ public class BankAccount {
         this.accountNumber = accountNumber;
         this.balance = balance;
         this.transactionHistory = new ArrayList<>();
+        this.nickname = null;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void deposit(double amount) {
@@ -70,9 +81,15 @@ public class BankAccount {
         this.transactionHistory.add(new Transaction("Withdrawal", amountToWithdraw, this.accountNumber));
     }
 
-    public void viewTransactionHistory() {
-        for (Transaction t : transactionHistory) {
-            System.out.println(t);
+    public void viewTransactionHistory(String type) {
+        boolean filtered = type != null && !type.isEmpty();
+        long transactionCount = transactionHistory.stream()
+            .filter(t -> !filtered || t.getType().equalsIgnoreCase(type))
+            .peek(System.out::println)
+            .count();
+            
+        if (transactionCount == 0) {
+            System.out.println("No transactions found.");
         }
     }
 
