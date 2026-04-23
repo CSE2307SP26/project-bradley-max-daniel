@@ -26,19 +26,19 @@ public class MortgageTest {
 
    @Test
    public void testApplyForMortgageForCustomerWithoutMortgage() {
-       customer.applyForMortgage(10000.0, 0.05, 10);
+       customer.applyForMortgage(10000.0, 10);
        assertTrue(customer.hasMortgage());
    }
 
 
    @Test
    public void testCustomerCannotHaveSecondMortgage() {
-       customer.applyForMortgage(10000.0, 0.05, 10);
+       customer.applyForMortgage(10000.0, 10);
        Mortgage originalMortgage = customer.getMortgage();
 
 
        assertThrows(IllegalStateException.class, () -> {
-           customer.applyForMortgage(20000.0, 0.05, 10);
+           customer.applyForMortgage(20000.0, 10);
        });
 
 
@@ -47,7 +47,7 @@ public class MortgageTest {
 
    @Test
    public void testGetRemainingMortgageBalance() {
-       customer.applyForMortgage(10000.0, 0.05, 10);
+       customer.applyForMortgage(10000.0, 10);
        assertEquals(10000.0, customer.getMortgage().getRemainingBalance(), 0.00001);
    }
 
@@ -95,7 +95,7 @@ public class MortgageTest {
     public void testApplyForMortgageWithGoodCreditScore() {
         customer.setCreditScore(700);
 
-        customer.applyForMortgage(10000.0, 0.05, 10);
+        customer.applyForMortgage(10000.0, 10);
 
         assertTrue(customer.hasMortgage()); 
     }
@@ -105,11 +105,39 @@ public class MortgageTest {
         customer.setCreditScore(550);
 
         assertThrows(IllegalStateException.class, () -> {
-            customer.applyForMortgage(10000.0, 0.05, 10);
+            customer.applyForMortgage(10000.0, 10);
         });
 
         assertFalse(customer.hasMortgage());
     }
+
+    @Test
+    public void test750CreditScoreGets3PercentInterestRate() {
+        customer.setCreditScore(750);
+
+        customer.applyForMortgage(10000.0, 10);
+
+        assertEquals(.03, customer.getMortgage().getAnnualRate(), 0.00001);
+    }
+
+    @Test
+    public void test700CreditScoreGets5PercentInterestRate() {
+        customer.setCreditScore(700);
+
+        customer.applyForMortgage(10000.0, 10);
+
+        assertEquals(.05, customer.getMortgage().getAnnualRate(), 0.00001);
+    }
+
+    @Test
+    public void test600CreditScoreGets10PercentInterestRate() {
+        customer.setCreditScore(600);
+
+        customer.applyForMortgage(10000.0, 10);
+
+        assertEquals(.1, customer.getMortgage().getAnnualRate(), 0.00001);
+    }
+
 
 
 

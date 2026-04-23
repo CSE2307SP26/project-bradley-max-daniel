@@ -71,7 +71,7 @@ public class Customer {
         return account.getTransactionHistory();
     }
 
-    public void applyForMortgage(double loanAmount, double annualRate, double termYears) {
+    public void applyForMortgage(double loanAmount, double termYears) {
         if (hasMortgage()) {
             throw new IllegalStateException("Customer already has a mortgage");
         }
@@ -80,6 +80,7 @@ public class Customer {
             throw new IllegalStateException("Credit score too low for mortgage approval");
         }
 
+        double annualRate = determineMortgageInterestRate();
         this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
         updateCreditScore();
     }
@@ -163,6 +164,20 @@ public class Customer {
         if (score > 850)
             return 850;
         return score;
+    }
+
+    private double determineMortgageInterestRate(){
+        
+        if (creditScore >= 750){
+            return .03;
+        }
+
+        if (creditScore >= 700){
+            return .05;
+        }
+
+        return .1;
+
     }
 
 }
