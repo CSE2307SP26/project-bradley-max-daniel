@@ -34,11 +34,9 @@ public class BankService {
         try {
             System.out.print("Enter loan amount: ");
             double loanAmount = Double.parseDouble(scanner.nextLine());
-            System.out.print("Enter annual interest rate (example: 0.05 for 5%): ");
-            double annualRate = Double.parseDouble(scanner.nextLine());
             System.out.print("Enter term in years: ");
             double termYears = Double.parseDouble(scanner.nextLine());
-            customer.applyForMortgage(loanAmount, annualRate, termYears);
+            customer.applyForMortgage(loanAmount, termYears);
             persistence.updateCustomer(customer);
             System.out.println("Mortgage application successful.");
         } catch (NumberFormatException e) {

@@ -4,7 +4,7 @@ package test;
 import main.Customer;
 import main.Mortgage;
 
-import static org.junit.Assert.assertSame;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -137,9 +137,6 @@ public class MortgageTest {
 
         assertEquals(.1, customer.getMortgage().getAnnualRate(), 0.00001);
     }
-
-
-
 
 }
 
