@@ -8,9 +8,14 @@
 
 ### What commands are needed to compile and run your code from the command line?
 
+Running the app:
 `chmod +x runApp.sh`
 
 `./runApp.sh`
+
+Running the tests:
+`chmod +x runTests.sh`
+`./runTests.sh`
 
 ## Iteration 3
 

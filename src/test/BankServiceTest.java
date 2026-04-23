@@ -48,7 +48,7 @@ public class BankServiceTest {
     @Test
     public void testApplyForMortgage() {
         assertFalse(customer.hasMortgage());
-        customer.applyForMortgage(1000, 0.05, 10);
+        customer.applyForMortgage(1000, 10);
         assertTrue(customer.hasMortgage());
         assertEquals(1000, customer.getMortgage().getLoanAmount());
     }
