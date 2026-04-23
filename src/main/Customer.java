@@ -76,6 +76,10 @@ public class Customer {
             throw new IllegalStateException("Customer already has a mortgage");
         }
 
+        if (creditScore < 600) {
+            throw new IllegalStateException("Credit score too low for mortgage approval");
+        }
+
         this.mortgage = new Mortgage(loanAmount, annualRate, termYears);
         updateCreditScore();
     }

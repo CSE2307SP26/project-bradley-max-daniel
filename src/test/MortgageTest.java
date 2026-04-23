@@ -4,7 +4,7 @@ package test;
 import main.Customer;
 import main.Mortgage;
 
-
+import static org.junit.Assert.assertSame;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -89,6 +89,26 @@ public class MortgageTest {
     public void testIsPaidOffTrueWhenBalanceIsZero() {
         mortgage.makePayment(10000.0);
         assertTrue(mortgage.isPaidOff());
+    }
+
+    @Test
+    public void testApplyForMortgageWithGoodCreditScore() {
+        customer.setCreditScore(700);
+
+        customer.applyForMortgage(10000.0, 0.05, 10);
+
+        assertTrue(customer.hasMortgage()); 
+    }
+
+    @Test
+    public void testApplyForMortgageWithLowCreditScore() {
+        customer.setCreditScore(550);
+
+        assertThrows(IllegalStateException.class, () -> {
+            customer.applyForMortgage(10000.0, 0.05, 10);
+        });
+
+        assertFalse(customer.hasMortgage());
     }
 
 
